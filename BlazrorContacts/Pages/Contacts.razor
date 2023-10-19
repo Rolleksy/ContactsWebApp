@@ -26,14 +26,14 @@
                     </thead>
                     <tbody>
                         @foreach (var contact in ContactList)
-                        {
+                    {
                             <tr>
                                 <td>@contact.FirstName</td>
                                 <td>@contact.LastName</td>
                                 <td>@contact.Mail</td>
                                 <td>@contact.PhoneNumber</td>
                             </tr>
-                        }
+                    }
                     </tbody>
                 </table>
             }
@@ -64,7 +64,7 @@
                     </thead>
                     <tbody>
                         @foreach (var contact in ContactList)
-                        {
+                    {
                             <tr>
                                 <td>@contact.FirstName</td>
                                 <td>@contact.LastName</td>
@@ -76,7 +76,7 @@
                                     <button @onclick="() => OpenEditModal(contact)">Edit</button>
                                 </td>
                             </tr>
-                        }
+                    }
                     </tbody>
                 </table>
             }
@@ -128,6 +128,7 @@
     {
         IsEditModalOpen = newState;
     }
+
     private async Task RefreshContactList()
     {
         ContactList = await client.GetFromJsonAsync<List<ContactModel>>("/api/ContactModel");
