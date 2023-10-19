@@ -1,0 +1,89 @@
+﻿@using BlazorContacts.Models;
+@inject HttpClient client
+<!-- ModalForm.razor -->
+<div class="modal" style="display: @(IsAddModalOpen ? "block" : "none")">
+    <div class="modal-content">
+        <h3>Dodaj nowy kontakt</h3>
+
+        <EditForm Model="@newContact" OnValidSubmit="@HandleValidSubmit">
+            <DataAnnotationsValidator />
+
+            <div class="form-group">
+                <label for="FirstName">Imię:</label>
+                <InputText @bind-Value="newContact.FirstName" class="form-control" />
+                <ValidationMessage For="@(() => newContact.FirstName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="LastName">Nazwisko:</label>
+                <InputText @bind-Value="newContact.LastName" class="form-control" />
+                <ValidationMessage For="@(() => newContact.LastName)" />
+            </div>
+
+            <div class="form-group">
+                <label for="PhoneNumber">Numer telefonu:</label>
+                <InputText @bind-Value="newContact.PhoneNumber" class="form-control" />
+                <ValidationMessage For="@(() => newContact.PhoneNumber)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Mail">Adres e-mail:</label>
+                <InputText @bind-Value="newContact.Mail" class="form-control" />
+                <ValidationMessage For="@(() => newContact.Mail)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Password">Hasło:</label>
+                <InputText @bind-Value="newContact.Password" class="form-control" />
+                <ValidationMessage For="@(() => newContact.Password)" />
+            </div>
+
+            <div class="form-group">
+                <label for="DateOfBirth">Data urodzenia:</label>
+                <InputText @bind-Value="newContact.DateOfBirth" class="form-control" />
+                <ValidationMessage For="@(() => newContact.DateOfBirth)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Category">Kategoria:</label>
+                <InputText @bind-Value="newContact.Category" class="form-control" />
+                <ValidationMessage For="@(() => newContact.Category)" />
+            </div>
+
+            <div class="form-group">
+                <label for="Subcategory">Podkategoria:</label>
+                <InputText @bind-Value="newContact.Subcategory" class="form-control" />
+                <ValidationMessage For="@(() => newContact.Subcategory)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </EditForm>
+        
+        <button @onclick="CloseAddModal">Zamknij</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool IsAddModalOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsAddModalOpenChanged { get; set; }
+
+    private ContactModel newContact = new ContactModel();
+
+    private void CloseAddModal()
+    {
+        IsAddModalOpen = false;
+        IsAddModalOpenChanged.InvokeAsync(IsAddModalOpen);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await client.PostAsJsonAsync("/api/ContactModel", newContact);
+        CloseAddModal();
+    }
+
+    private async Task RefreshContactList()
+    {
+        // Tu można umieścić logikę odświeżania listy kontaktów
+        // W przypadku AddContact.razor, możesz wywołać odpowiednią logikę dla tej strony
+    }
+}

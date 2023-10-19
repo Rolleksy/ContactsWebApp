@@ -1,0 +1,62 @@
+﻿@using BlazorContacts.Models;
+@inject HttpClient client
+<!-- EditContact.razor -->
+@if (EditContactModel != null)
+{
+    <div class="modal" style="display: @(IsEditModalOpen ? "block" : "none")">
+        <div class="modal-content">
+            <h3>Edit Contact</h3>
+
+            <EditForm Model="@EditContactModel" OnValidSubmit="@HandleValidSubmit">
+                <DataAnnotationsValidator />
+
+                <div class="form-group">
+                    <label for="FirstName">First Name:</label>
+                    <InputText @bind-Value="EditContactModel.FirstName" class="form-control" />
+                    <ValidationMessage For="@(() => EditContactModel.FirstName)" />
+                </div>
+                <div class="form-group">
+                    <label for="LastName">Last Name:</label>
+                    <InputText @bind-Value="EditContactModel.LastName" class="form-control" />
+                    <ValidationMessage For="@(() => EditContactModel.LastName)" />
+                </div>
+                <div class="form-group">
+                    <label for="PhoneNumber">Phone number:</label>
+                    <InputText @bind-Value="EditContactModel.PhoneNumber" class="form-control" />
+                    <ValidationMessage For="@(() => EditContactModel.PhoneNumber)" />
+                </div>
+                <div class="form-group">
+                    <label for="Mail">Mail:</label>
+                    <InputText @bind-Value="EditContactModel.Mail" class="form-control" />
+                    <ValidationMessage For="@(() => EditContactModel.Mail)" />
+                </div>
+
+                <!-- Add other fields here -->
+
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+
+            <button @onclick="CloseEditModal">Close</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsEditModalOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsEditModalOpenChanged { get; set; }
+    [Parameter] public ContactModel EditContactModel { get; set; }
+
+    private void CloseEditModal()
+    {
+        IsEditModalOpen = false;
+        IsEditModalOpenChanged.InvokeAsync(IsEditModalOpen);
+    }
+
+    private void HandleValidSubmit()
+    {
+        // Handle save logic here
+
+        // Close modal after saving
+        CloseEditModal();
+    }
+}
