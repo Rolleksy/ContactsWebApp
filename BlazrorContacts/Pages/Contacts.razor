@@ -1,0 +1,96 @@
+﻿@page "/contacts"
+@using BlazorContacts.Models;
+@inject HttpClient client
+
+
+<h3>Contacts</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <div>
+            <p>Proszę się zalogować, aby uzyskać dostęp do szczegółów strony z kontaktami.</p>
+            <a href="/Identity/Account/Login">Przejdź do strony logowania</a>
+        </div>
+        <div>
+            @if (ContactList != null)
+            {
+                <ul>
+                    @foreach (var item in ContactList)
+                    {
+                        <li>@item.FirstName</li>
+                        <li>@item.LastName</li>
+                        <li>@item.Mail</li>
+                        <li>@item.PhoneNumber</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Brak danych do wyświetlenia.</p>
+            }
+        </div>
+
+    </NotAuthorized>
+    <Authorized>
+        <h1>Witam zalogowanego użytkownika</h1>
+
+        <div>
+            @if (ContactList != null)
+            {
+                <ul>
+                    @foreach (var item in ContactList)
+                    {
+                        <li>@item.FirstName</li>
+                        <li>@item.LastName</li>
+                        <li>@item.Mail</li>
+                        <li>@item.PhoneNumber</li>
+                        <li>@item.DateOfBirth</li>
+                        <li>@item.Category</li>
+                        <li>@item.Subcategory</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Brak danych do wyświetlenia.</p>
+            }
+        </div>
+        <button @onclick="OpenModal">Dodaj nowy kontakt</button>
+        <AddContact IsModalOpen="@IsModalOpen" IsModalOpenChanged="HandleModalStateChanged" />
+
+
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    List<ContactModel> ContactList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshContactList();
+    }
+
+    private bool IsModalOpen { get; set; }
+
+    private void OpenModal()
+    {
+        IsModalOpen = true;
+    }
+
+    private void HandleModalStateChanged(bool newState)
+    {
+        IsModalOpen = newState;
+
+        // Odświeżenie listy kontaktów po zamknięciu modala
+        if (!IsModalOpen)
+        {
+            RefreshContactList();
+        }
+    }
+
+    private async Task RefreshContactList()
+    {
+        ContactList = await client.GetFromJsonAsync<List<ContactModel>>("/api/ContactModel");
+    }
+    
+}
