@@ -1,4 +1,5 @@
 ﻿@using BlazorContacts.Models;
+@using System.Net.Http.Json;
 @inject HttpClient client
 <!-- EditContact.razor -->
 @if (EditContactModel != null)
@@ -30,10 +31,28 @@
                     <InputText @bind-Value="EditContactModel.Mail" class="form-control" />
                     <ValidationMessage For="@(() => EditContactModel.Mail)" />
                 </div>
+                <div class="form-group">
+                    <InputSelect @bind-Value="EditContactModel.Category" class="form-control">
+                        <option value="Work">Praca</option>
+                        <option value="Personal">Osobiste</option>
+                        <option value="Other">Inne</option>
+                    </InputSelect>
+                </div>
+                @if (EditContactModel.Category == "Work")
+                {
+                    <div class="form-group">
+                        <label for="Subcategory">Podkategoria:</label>
+                        <InputText @bind-Value="EditContactModel.Subcategory" class="form-control" />
+                        <ValidationMessage For="@(() => EditContactModel.Subcategory)" />
+                    </div>
+                }
+                else{
+                    EditContactModel.Subcategory = null;
+                }
 
                 <!-- Add other fields here -->
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" >Save</button>
             </EditForm>
 
             <button @onclick="CloseEditModal">Close</button>
@@ -52,11 +71,30 @@
         IsEditModalOpenChanged.InvokeAsync(IsEditModalOpen);
     }
 
-    private void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
-        // Handle save logic here
-
-        // Close modal after saving
-        CloseEditModal();
+        try
+        {
+            await client.PutAsJsonAsync($"/api/ContactModel/{EditContactModel.Id}", EditContactModel);
+            
+        }
+        catch (Exception ex)
+        {
+            // Obsługa błędów
+            Console.WriteLine($"Błąd podczas edycji danych: {ex.Message}");
+        }
+    }
+    private async Task SaveChanges()
+    {
+        try
+        {
+            await client.PutAsJsonAsync<ContactModel>($"/api/ContactModel/{EditContactModel.Id}", EditContactModel);
+            
+        }
+        catch (Exception ex)
+        {
+            // Obsługa błędów
+            Console.WriteLine($"Błąd podczas edycji danych: {ex.Message}");
+        }
     }
 }

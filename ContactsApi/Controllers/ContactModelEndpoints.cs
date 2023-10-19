@@ -35,7 +35,7 @@ namespace ContactsApi.Controllers
                 var affected = await db.Contacts
                     .Where(model => model.Id == id)
                     .ExecuteUpdateAsync(setters => setters
-                      .SetProperty(m => m.Id, contactModel.Id)
+                      //.SetProperty(m => m.Id, contactModel.Id)
                       .SetProperty(m => m.FirstName, contactModel.FirstName)
                       .SetProperty(m => m.LastName, contactModel.LastName)
                       .SetProperty(m => m.PhoneNumber, contactModel.PhoneNumber)
