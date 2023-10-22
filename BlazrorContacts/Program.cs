@@ -25,7 +25,11 @@ namespace BlazrorContacts
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            
+            // Poni¿ej wstrzykujemy HttpClient po³¹czony w przypadku tej aplikacji z API na adresie localhost:7189
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7189") });
+            // Wstrzykujemy klasê Functionalities.cs w celu umo¿liwienia u¿ycia funkcji sprawdzaj¹cej has³o
+            builder.Services.AddScoped<Functionalities>();
 
             var app = builder.Build();
 

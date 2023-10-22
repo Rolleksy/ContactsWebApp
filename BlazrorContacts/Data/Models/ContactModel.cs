@@ -2,6 +2,7 @@
 
 namespace BlazorContacts.Models
 {
+    // Klasa modelu kontaktu
     public class ContactModel
     {
         public int Id { get; set; }

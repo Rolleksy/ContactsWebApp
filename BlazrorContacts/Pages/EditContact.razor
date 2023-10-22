@@ -1,13 +1,15 @@
 ﻿@using BlazorContacts.Models;
 @using System.Net.Http.Json;
 @inject HttpClient client
-<!-- EditContact.razor -->
+
+<!--Sprawdzamy czy przesłany kontakt nie jest pusty-->
 @if (EditContactModel != null)
 {
-    <div class="modal" style="display: @(IsEditModalOpen ? "block" : "none")">
+    <!--Określamy, że ten element ma być modalem-->
+    <div class="modal" style="display: @(IsEditModalOpen ? "block" : "none"); top: 50%; left: 50%; transform: translate(-50%, -50%);">
         <div class="modal-content">
             <h3>Edit Contact</h3>
-
+            <!--Tworzymy formę, do której przesyłane są dane z EditContactModel, dzięki tej formie, możemy go zmienić-->
             <EditForm Model="@EditContactModel" OnValidSubmit="@HandleValidSubmit">
                 <DataAnnotationsValidator />
 
@@ -38,6 +40,7 @@
                         <option value="Other">Inne</option>
                     </InputSelect>
                 </div>
+                <!--IF sprawdzający czy kategoria jest WORK, co później wyświetla Subcategory-->
                 @if (EditContactModel.Category == "Work")
                 {
                     <div class="form-group">
@@ -49,46 +52,34 @@
                 else{
                     EditContactModel.Subcategory = null;
                 }
-
-                <!-- Add other fields here -->
-
+                <!--Przycisk zbiera dane z formy i wysyłający je dalej, w tym przypadku ma je zapostować do API-->
                 <button type="submit" class="btn btn-primary" >Save</button>
             </EditForm>
-
+            <!--Przycisk odsyłający do metody zamykającej modala-->
             <button @onclick="CloseEditModal">Close</button>
         </div>
     </div>
 }
 
 @code {
+    // Parametry
     [Parameter] public bool IsEditModalOpen { get; set; }
     [Parameter] public EventCallback<bool> IsEditModalOpenChanged { get; set; }
     [Parameter] public ContactModel EditContactModel { get; set; }
 
+    // Metoda zamykająca modala
     private void CloseEditModal()
     {
         IsEditModalOpen = false;
         IsEditModalOpenChanged.InvokeAsync(IsEditModalOpen);
     }
 
+    // Asynchroniczna metoda przesyłająca dane z formy i jeśli wszystko z tymi danymi jest w porządku, wysyła żądanie PUT do api z edytowanym kontaktem
     private async Task HandleValidSubmit()
     {
         try
         {
             await client.PutAsJsonAsync($"/api/ContactModel/{EditContactModel.Id}", EditContactModel);
-            
-        }
-        catch (Exception ex)
-        {
-            // Obsługa błędów
-            Console.WriteLine($"Błąd podczas edycji danych: {ex.Message}");
-        }
-    }
-    private async Task SaveChanges()
-    {
-        try
-        {
-            await client.PutAsJsonAsync<ContactModel>($"/api/ContactModel/{EditContactModel.Id}", EditContactModel);
             
         }
         catch (Exception ex)

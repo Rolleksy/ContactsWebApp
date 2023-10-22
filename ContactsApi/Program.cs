@@ -17,6 +17,7 @@ namespace ContactsApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            // Wstrzykiwanie kontekstu ContactContext do aplikacji
             builder.Services.AddDbContext<ContactContext>();   
             var app = builder.Build();
 
@@ -31,7 +32,8 @@ namespace ContactsApi
 
             app.UseAuthorization();
 
-                        app.MapContactModelEndpoints();
+            // Metoda mapuj¹ca punkty koñcowe
+            app.MapContactModelEndpoints();
 
            
 

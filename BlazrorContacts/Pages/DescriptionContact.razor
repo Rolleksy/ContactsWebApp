@@ -1,0 +1,53 @@
+﻿@using BlazorContacts.Models;
+
+<!--Sprawdzamy czy przesłany kontakt jest pusty-->
+@if (DescriptionContactModel != null)
+{
+    <!--Jeśli nie jest pusty, wykonujemy poniższy kod. Ustalamy, że element ma być modalem wyświtlającym tabele ze szczegółowymi danymi kontaktu-->
+    <div class="modal" style="display: @(IsDescriptionModalOpen ? "block" : "none"); top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="modal-content">
+        <h3>Szczegóły kontaktu</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Mail</th>
+                    <th>Date of birth</th>
+                    <th>Password</th>
+                    <th>Category</th>
+                    <th>Subcategory</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td>@DescriptionContactModel.FirstName</td>
+                        <td>@DescriptionContactModel.LastName</td>
+                        <td>@DescriptionContactModel.PhoneNumber</td>
+                        <td>@DescriptionContactModel.Mail</td>
+                        <td>@DescriptionContactModel.DateOfBirth</td>
+                        <td>@DescriptionContactModel.Password</td>
+                        <td>@DescriptionContactModel.Category</td>
+                        <td>@DescriptionContactModel.Subcategory</td>
+                    </tr>
+            </tbody>
+        </table>
+        <!--Przycisk zamykający modala-->
+        <button @onclick="CloseDescriptionModal">Zamknij</button>
+        </div>
+        </div>
+}
+@code{
+    // Parametry
+    [Parameter] public bool IsDescriptionModalOpen { get; set; }
+    [Parameter] public EventCallback<bool> IsDescriptionModalOpenChanged { get; set; }
+    [Parameter] public ContactModel DescriptionContactModel { get; set; }
+
+    // Metoda zamykająca modala, do tej metody odsyła przycisk ZAMKNIJ
+    private void CloseDescriptionModal()
+    {
+        IsDescriptionModalOpen = false;
+        IsDescriptionModalOpenChanged.InvokeAsync(IsDescriptionModalOpen);
+    }
+}

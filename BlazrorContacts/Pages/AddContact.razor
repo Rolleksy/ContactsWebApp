@@ -1,10 +1,12 @@
 ﻿@using BlazorContacts.Models;
 @inject HttpClient client
-<!-- ModalForm.razor -->
-<div class="modal" style="display: @(IsAddModalOpen ? "block" : "none")">
+@inject Data.Functionalities func
+
+<!--Blok określający, że mamy do czynienia z modalem-->
+<div class="modal" style="display: @(IsAddModalOpen ? "block" : "none"); top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="modal-content">
         <h3>Dodaj nowy kontakt</h3>
-
+        <!--Forma przyjmująca dane wg modelu ContactModel.cs-->
         <EditForm Model="@newContact" OnValidSubmit="@HandleValidSubmit">
             <DataAnnotationsValidator />
 
@@ -36,6 +38,8 @@
                 <label for="Password">Hasło:</label>
                 <InputText @bind-Value="newContact.Password" class="form-control" />
                 <ValidationMessage For="@(() => newContact.Password)" />
+                <!--Dodatkowy label pozwalający na wyświetlenie czerwonego powiadomieniu o błędnym haśle-->
+                <label style="color: red">@errorMsg</label>
             </div>
 
             <div class="form-group">
@@ -60,35 +64,42 @@
                 </div>
             }
             
-
+            <!--Przycisk zbiera dane z formy i wysyłający je dalej, w tym przypadku ma je zapostować do API-->
             <button type="submit" class="btn btn-primary">Zapisz</button>
         </EditForm>
-
+        <!--Przycisk zamykający modala-->
         <button @onclick="CloseAddModal">Zamknij</button>
     </div>
 </div>
 
 @code {
+    // Paramtery
     [Parameter] public bool IsAddModalOpen { get; set; }
     [Parameter] public EventCallback<bool> IsAddModalOpenChanged { get; set; }
+    private string errorMsg;
 
     private ContactModel newContact = new ContactModel();
 
+    // Metoda zamykająca modala
     private void CloseAddModal()
     {
         IsAddModalOpen = false;
         IsAddModalOpenChanged.InvokeAsync(IsAddModalOpen);
     }
 
+    // Metoda wykonywana po wciśnięciu przycisku ZAPISZ. Sprawdza czy hasło jest zgodne z wytycznymi za pomocą metody znajdującej się w Data/Functionalities.cs
     private async Task HandleValidSubmit()
     {
-        await client.PostAsJsonAsync("/api/ContactModel", newContact);
-        CloseAddModal();
+        if (!func.SprawdzZlozonoscHasla(newContact.Password))
+        {
+            errorMsg = "Hasło nieprawidłowe";
+        }
+        else
+        {
+            // Jeśli hasło przejdzie przez weryfikacje, poniższy kod jest wykonywany i wstawiamy newContact do DB przez API POST
+            await client.PostAsJsonAsync("/api/ContactModel", newContact);
+            CloseAddModal();
+        }  
     }
 
-    private async Task RefreshContactList()
-    {
-        // Tu można umieścić logikę odświeżania listy kontaktów
-        // W przypadku AddContact.razor, możesz wywołać odpowiednią logikę dla tej strony
-    }
 }

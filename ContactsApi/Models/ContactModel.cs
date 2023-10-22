@@ -2,6 +2,7 @@
 
 namespace ContactsApi.Models
 {
+    // Model danych kontaktu dla API
     public class ContactModel
     {
         public int Id { get; set; }

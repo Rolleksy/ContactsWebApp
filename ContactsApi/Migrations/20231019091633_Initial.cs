@@ -4,10 +4,10 @@
 
 namespace ContactsApi.Migrations
 {
-    /// <inheritdoc />
+    /// Klasa automatycznie wygenerowana za pomocą "dotnet ef migrations add Initial"
     public partial class Initial : Migration
     {
-        /// <inheritdoc />
+        /// Metoda, wygenerowana automatyczna, tworząca tabele na podstawie modelu ContactModel.cs
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -31,7 +31,7 @@ namespace ContactsApi.Migrations
                 });
         }
 
-        /// <inheritdoc />
+        /// Metoda usuwającą tabelę
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

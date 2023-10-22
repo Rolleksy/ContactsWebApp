@@ -5,7 +5,12 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactsApi", "ContactsApi\ContactsApi.csproj", "{4E8F3022-3939-4EB0-B472-92D84A4FA54D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazrorContacts", "BlazrorContacts\BlazrorContacts.csproj", "{D9EEC784-14D5-4802-8108-431C181D6218}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazrorContacts", "BlazrorContacts\BlazrorContacts.csproj", "{D9EEC784-14D5-4802-8108-431C181D6218}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementy rozwiązania", "Elementy rozwiązania", "{7C747A35-E620-4FB9-BD44-66EE09869230}"
+	ProjectSection(SolutionItems) = preProject
+		TrescZadania.txt = TrescZadania.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,65 @@
+.NET CORE – zadanie 1
+
+Proszê napisz prost¹ aplikacjê (stronê Web) obs³uguj¹c¹ listê kontaktów.
+Funkcjonalnoœci:
+1. Logowanie:
+Funkcjonalnoœæ z pkt. 2 dostêpna jest dla niezalogowanego u¿ytkownika, pozosta³e wymagaj¹ zalogowania.
+2. Przegl¹danie listy kontaktów:
+Lista powinna zawieraæ dane podstawowe. Po wybraniu konkretnego kontaktu wyœwietlane s¹ jego
+szczegó³y.
+3. Szczegó³y kontaktu:
+Zalogowany u¿ytkownik mo¿e edytowaæ i usuwaæ istniej¹ce wpisy oraz dodawaæ nowe. Pojedynczy kontakt
+powinien mieæ przynajmniej:
+• imiê,
+• nazwisko,
+• email – unikalny,
+• has³o – powinno spe³niaæ podstawowe standardy z³o¿onoœci has³a,
+• kategoria (s³u¿bowy, prywatny, inny),
+• w przypadku wybrania opcji „s³u¿bowy” powinna byæ mo¿liwoœæ wybrania podkategorii ze s³ownika (np.
+szef, klient, itp.), a w przypadku opcji „inny” mo¿liwoœæ wpisania dowolnej podkategorii,
+• telefon,
+• data urodzenia.
+
+Za³o¿enia techniczne:
+• Aplikacja powinna byæ napisana w jêzyku C# z u¿yciem dowolnej bazy danych.
+• Architektura aplikacji backendowej - REST API - wymagane
+• Architektura aplikacji frontendowej - Single Page Application - wymagane
+• Wszelkie dane s³ownikowe (kategorie, podkategorie) powinny byæ trzymane w bazie danych -
+wymagane
+• Zaleca siê wykorzystanie darmowych bibliotek
+• Nale¿y zwróciæ uwagê na bezpieczeñstwo aplikacji
+• Kod Ÿród³owy powinien zawieraæ komentarze
+• Wygl¹d graficzny aplikacji jest nieistotny
+
+Do zadania nale¿y przygotowaæ krótk¹ specyfikacjê techniczn¹ zawieraj¹c¹:
+• opis poszczególnych klas i metod,
+• wykorzystane biblioteki,
+• sposób kompilacji aplikacji.
+
+
+---------------------------------------------------------------------------
+
+SQL/ERD – zadanie 2
+Zaprojektuj bazê danych opisan¹ poni¿ej. Narysuj diagram ERD, zaznacz klucze i klucze obce. Nastêpnie
+przedstaw treœæ zapytañ SQL zwracaj¹cych podane dane. Wska¿ kolumny, które nale¿a³oby indeksowaæ, aby
+przyspieszyæ przygotowane zapytania. Korzystaj wy³¹cznie ze standardu SQL.
+
+Opis bazy:
+Baza zawiera informacje o osobach (wszystkich Polakach urodzonych po roku 1900), takie jak: imiê, nazwisko,
+data urodzenia, p³eæ, zarobki. Ka¿da osoba mo¿e mieæ matkê i/lub ojca. Kobieta mo¿e mieæ jednego mê¿a,
+mê¿czyzna mo¿e mieæ jedn¹ ¿onê. Osoby pracuj¹ w przedsiêbiorstwach, posiadaj¹cych nazwê. Jedna osoba mo¿e
+pracowaæ w kilku przedsiêbiorstwach jednoczeœnie, na umowê zlecenie lub na umowê o pracê. Ka¿de
+przedsiêbiorstwo ma dok³adnie jednego prezesa.
+
+Zapytania:
+A. ZnajdŸ imiê i nazwisko osoby posiadaj¹cej najwiêksz¹ liczbê wnucz¹t p³ci ¿eñskiej.
+B. Przedstaw œredni¹ iloœæ pracowników zatrudnionych na umowê zlecenie i œredni¹ iloœæ pracowników
+zatrudnionych na umowê o pracê we wszystkich firmach oraz œredni¹ pensjê dla tych umów.
+C. ZnajdŸ rodzinê (co najwy¿ej 2 pokoleniow¹) najmniej zarabiaj¹c¹. Przedstaw imiê i nazwisko dowolnej osoby
+z tej rodziny.
+PodpowiedŸ: rodzina 1-pokoleniowa to osoba X z ewentualnym wspó³ma³¿onkiem. Rodzina 2-pokoleniowa to
+rodzina 1-pokoleniowa z wszystkimi jej dzieæmi (wraz z ewentualnymi wspó³ma³¿onkami) lub rodzicami.
+
+Pliki, schemat ERD oraz zrzut bazy danych prosimy przes³aæ mailem w spakowanym archiwum (7-zip lub ZIP) na
+adres mailowy z którego otrzyma³eœ/aœ zadanie. Za³¹cznik nie powinien byæ wiêkszy ni¿ 18 MB. Kod zadania
+mo¿esz wrzuciæ do w³asnego repo ze wskazaniem nam miejsca.

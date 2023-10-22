@@ -4,6 +4,7 @@ using System;
 
 namespace BlazrorContacts.Data.Migrations
 {
+    // Automatycznie wygenerowana klasa migracji odpowiedzialna za tworzenie tabeli z danymi użytkowników
     public partial class CreateIdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

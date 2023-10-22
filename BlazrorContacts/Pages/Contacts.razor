@@ -1,17 +1,17 @@
-﻿@page "/contacts"
+﻿
+@page "/contacts"
 @using BlazorContacts.Models;
 @inject HttpClient client
+@using Microsoft.AspNetCore.Components.Authorization
 
+<h3>Contact List</h3>
 
-<h3>Contacts</h3>
-
+<!--Otwieramy element AuthorizeView, aby mieć rozgraniczenie między widokiem dostępnym dla użytkownika zalogowanego oraz niezalogowanego-->
 <AuthorizeView>
+    <!--Pierwsza część odnosi się do widoku dla użytkownika niezalogowanego-->
     <NotAuthorized>
         <div>
-            <p>Proszę się zalogować, aby uzyskać dostęp do szczegółów strony z kontaktami.</p>
-            <a href="/Identity/Account/Login">Przejdź do strony logowania</a>
-        </div>
-        <div>
+            <!--Pętla sprawdzająca czy lista jest pusta i jeśli nie jest wyświetla podstawowe dane na temat kontaktu-->
             @if (ContactList != null)
             {
                 <table class="table">
@@ -19,9 +19,6 @@
                         <tr>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Mail</th>
-                            <th>Phone Number</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -30,8 +27,6 @@
                             <tr>
                                 <td>@contact.FirstName</td>
                                 <td>@contact.LastName</td>
-                                <td>@contact.Mail</td>
-                                <td>@contact.PhoneNumber</td>
                             </tr>
                     }
                     </tbody>
@@ -42,11 +37,18 @@
                 <p>Brak danych do wyświetlenia.</p>
             }
         </div>
-
+        <!--div przypominający o możliwości zalogowania i ułatwiające przejście do zakładki logowania-->
+        <div>
+            <p>Proszę się zalogować, aby uzyskać dostęp do szczegółów strony z kontaktami.</p>
+            <br />
+            <a href="/Identity/Account/Login">Przejdź do strony logowania</a>
+        </div>
     </NotAuthorized>
-    <Authorized>
-        <h1>Witam zalogowanego użytkownika</h1>
 
+    <!--Druga część odnosi się do widoku dla użytkownika zalogowanego-->
+    <Authorized>
+        <h3>Witam @userDisplayName</h3>
+        <!--Pętla wyświetlająca dane z DB w tabeli, wraz z przyciskami EDIT, DELETE i SHOW MORE-->
         <div>
             @if (ContactList != null)
             {
@@ -55,10 +57,6 @@
                         <tr>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Mail</th>
-                            <th>Phone Number</th>
-                            <th>Category</th>
-                            <th>Subcategory</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -68,12 +66,12 @@
                             <tr>
                                 <td>@contact.FirstName</td>
                                 <td>@contact.LastName</td>
-                                <td>@contact.Mail</td>
-                                <td>@contact.PhoneNumber</td>
-                                <td>@contact.Category</td>
-                                <td>@contact.Subcategory</td>
                                 <td>
+                                    <!--Przyciski otwierające modale: Description i Edit-->
+                                    <button @onclick="() => OpenDescriptionModal(contact)">Show more information</button>
                                     <button @onclick="() => OpenEditModal(contact)">Edit</button>
+                                    <!--Przycisk usuwający wybrany kontakt-->
+                                    <button @onclick="() => DeleteContact(contact)">Delete</button>
                                 </td>
                             </tr>
                     }
@@ -85,25 +83,49 @@
                 <p>Brak danych do wyświetlenia.</p>
             }
         </div>
+
+        <!--Przycisk otwierający modal pozwalający na tworzenie nowego kontaktu-->
         <button @onclick="OpenAddModal">Dodaj nowy kontakt</button>
+
+        <!--Zadeklarowane modale: EDIT, ADD, DESCRIPTION(show more)-->
         <AddContact IsAddModalOpen="@IsAddModalOpen" IsAddModalOpenChanged="HandleAddModalStateChanged" />
         <EditContact IsEditModalOpen="@IsEditModalOpen" IsEditModalOpenChanged="HandleEditModalStateChanged" EditContactModel="@selectedContact" />
+        <DescriptionContact IsDescriptionModalOpen="@IsDescriptionModalOpen" IsDescriptionModalOpenChanged="HandleDescriptionModalStateChanged" DescriptionContactModel="@selectedDescContact" />
 
     </Authorized>
 </AuthorizeView>
 
 @code {
+    // Zmienne
     List<ContactModel> ContactList;
     ContactModel selectedContact;
+    ContactModel selectedDescContact;
+    [Inject] private AuthenticationStateProvider authenticationStateProvider { get; set; }
+    private string userDisplayName;
 
+
+    // Metoda wykonywana podczas inicjalizacji strony Contacts.razor
     protected override async Task OnInitializedAsync()
     {
         await RefreshContactList();
+
+        // Poniższe rozwiązanie pozwala na wyświetlenie spersonalizowanego powitania
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var userName = authState.User;
+        if (userName.Identity.IsAuthenticated)
+        {
+            // Do userDisplayName przypisywana jest nazwa użytkowanika
+            userDisplayName = userName.Identity.Name;
+        }
     }
 
+    // Stany modala w postaci boolowskiej
     private bool IsAddModalOpen { get; set; }
     private bool IsEditModalOpen { get; set; }
+    private bool IsDescriptionModalOpen { get; set; }
 
+
+    // Metody otwierające modale, w przypadku Edit i Description pobiera aktualny kontakt jako argument z listy
     private void OpenAddModal()
     {
         IsAddModalOpen = true;
@@ -113,25 +135,57 @@
         selectedContact = contact;
         IsEditModalOpen = true;
     }
+    private void OpenDescriptionModal(ContactModel contact)
+    {
+        selectedDescContact = contact;
+        IsDescriptionModalOpen = true;
+    }
 
-    private void HandleAddModalStateChanged(bool newState)
+
+    // Metody ustawiające stan modala - BOOL
+    private async Task HandleAddModalStateChanged(bool newState)
     {
         IsAddModalOpen = newState;
 
         // Odświeżenie listy kontaktów po zamknięciu modala
         if (!IsAddModalOpen)
         {
-            RefreshContactList();
+            await RefreshContactList();
         }
     }
-    private void HandleEditModalStateChanged(bool newState)
+    private async Task HandleEditModalStateChanged(bool newState)
     {
         IsEditModalOpen = newState;
+
+        // Odświeżenie listy kontaktów po zamknięciu modala
+        if (!IsEditModalOpen)
+        {
+            await RefreshContactList();
+        }
+    }
+    private async Task HandleDescriptionModalStateChanged(bool newState)
+    {
+        IsDescriptionModalOpen = newState;
+
+        // Odświeżenie listy kontaktów po zamknięciu modala
+        if (!IsDescriptionModalOpen)
+        {
+            await RefreshContactList();
+        }
     }
 
+
+    // Metoda pobierająca listę kontaktów z API
     private async Task RefreshContactList()
     {
         ContactList = await client.GetFromJsonAsync<List<ContactModel>>("/api/ContactModel");
     }
-    
+
+    // Metoda usuwająca wybrany kontakt z DB
+    private async Task DeleteContact(ContactModel contact)
+    {
+        await client.DeleteAsync($"/api/ContactModel/{contact.Id}");
+        await RefreshContactList();
+    }
+
 }
