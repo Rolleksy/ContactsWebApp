@@ -35,8 +35,8 @@
                 </div>
                 <div class="form-group">
                     <InputSelect @bind-Value="EditContactModel.Category" class="form-control">
-                        <option value="Work">Praca</option>
-                        <option value="Personal">Osobiste</option>
+                        <option value="Work">Służbowy</option>
+                        <option value="Personal">Prywatny</option>
                         <option value="Other">Inne</option>
                     </InputSelect>
                 </div>
@@ -44,13 +44,19 @@
                 @if (EditContactModel.Category == "Work")
                 {
                     <div class="form-group">
+                        <InputSelect @bind-Value="EditContactModel.Subcategory" class="form-control">
+                            <option value="Boss">Szef</option>
+                            <option value="Client">Klient</option>
+                            <option value="Associate">Współpracownik</option>
+                        </InputSelect>
+                    </div>
+                }
+                else{
+                    <div class="form-group">
                         <label for="Subcategory">Podkategoria:</label>
                         <InputText @bind-Value="EditContactModel.Subcategory" class="form-control" />
                         <ValidationMessage For="@(() => EditContactModel.Subcategory)" />
                     </div>
-                }
-                else{
-                    EditContactModel.Subcategory = null;
                 }
                 <!--Przycisk zbiera dane z formy i wysyłający je dalej, w tym przypadku ma je zapostować do API-->
                 <button type="submit" class="btn btn-primary" >Save</button>

@@ -50,12 +50,22 @@
 
             <div class="form-group">
                 <InputSelect @bind-Value="newContact.Category" class="form-control">
-                    <option value="Work">Praca</option>
-                    <option value="Personal">Osobiste</option>
+                    <option value="Work">Służbowy</option>
+                    <option value="Personal">Prywatny</option>
                     <option value="Other">Inne</option>
                 </InputSelect>
             </div>
             @if (newContact.Category == "Work")
+            {
+                   <div class="form-group">
+                       <InputSelect @bind-Value="newContact.Subcategory" class="form-control">
+                           <option value="Boss">Szef</option>
+                           <option value="Client">Klient</option>
+                           <option value="Associate">Współpracownik</option>
+                       </InputSelect>
+                   </div>
+            }
+            else
             {
                 <div class="form-group">
                     <label for="Subcategory">Podkategoria:</label>
@@ -63,7 +73,7 @@
                     <ValidationMessage For="@(() => newContact.Subcategory)" />
                 </div>
             }
-            
+
             <!--Przycisk zbiera dane z formy i wysyłający je dalej, w tym przypadku ma je zapostować do API-->
             <button type="submit" class="btn btn-primary">Zapisz</button>
         </EditForm>
